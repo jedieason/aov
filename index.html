@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餘額計算</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 36px;
+        }
+        .player {
+            margin: 15px 0;
+            font-size: 24px;
+        }
+        button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            width: 100px;
+            font-size: 20px;
+        }
+        #log {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 22px;
+        }
+    </style>
+</head>
+<body>
+    <h1>傳說賭博</h1>
+    <div id="players"></div>
+    <div id="log"></div>
+
+    <script>
+        const players = [
+            { name: '', balance: 0 },
+            { name: '', balance: 0 },
+            { name: '', balance: 0 },
+            { name: '', balance: 0 },
+            { name: '', balance: 0 },
+        ];
+
+        function updateDisplay() {
+            const playersDiv = document.getElementById('players');
+            playersDiv.innerHTML = '';
+            players.forEach((player, index) => {
+                playersDiv.innerHTML += `
+                    <div class="player">
+                        <input type="text" id="name-${index}" value="${player.name}" placeholder="Player ${index + 1}" oninput="updateName(${index})" />
+                        : $<span id="balance-${index}">${player.balance}</span>
+                        <button onclick="kill(${index})">殺人</button>
+                        <button onclick="die(${index})">死亡</button>
+                    </div>
+                `;
+            });
+        }
+
+        function updateName(index) {
+            const nameInput = document.getElementById(`name-${index}`);
+            players[index].name = nameInput.value;
+        }
+
+        function kill(index) {
+            players.forEach((player, i) => {
+                if (i !== index) {
+                    player.balance -= 10;
+                } else {
+                    player.balance += 40;
+                }
+            });
+            logAction(`${players[index].name || '無名氏'} 殺了人`);
+            updateDisplay();
+        }
+
+        function die(index) {
+            players.forEach((player, i) => {
+                if (i !== index) {
+                    player.balance += 20;
+                } else {
+                    player.balance -= 80;
+                }
+            });
+            logAction(`${players[index].name || '無名氏'} 死亡`);
+            updateDisplay();
+        }
+
+        function logAction(action) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += `<p>${action}</p>`;
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
